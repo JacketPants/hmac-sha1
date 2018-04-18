@@ -60,7 +60,8 @@ int sha1_finish (bitstr * msg, hsh * h) {
   p = *msg;
   while (p.l[1] || (p.l[0] >= 512)) {
     sha1_nxt (p.d, 512, h);     /* FIXME check return value? */
-    p.d += 512;
+    p.d += 64;
+    p.l[0] -= 512;
     if (p.l[0] < 512) {
       if (p.l[1]) {
         p.l[1]--;
@@ -68,7 +69,6 @@ int sha1_finish (bitstr * msg, hsh * h) {
       else
         return 1;               /* length underflow; FIXME redundant? */
     }
-    p.l[0] -= 512;
   }
   sha1_end (p.d, p.l[0], h);    /* FIXME check return value? */
   return 0;
